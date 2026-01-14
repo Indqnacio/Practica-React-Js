@@ -3,6 +3,7 @@ import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
 import logoImage from "../assets/logo_side_nav.png";
+import { Link } from "react-router-dom";
 
 export default function SideNav() {
   const [visible, setVisible] = useState(false);
@@ -35,12 +36,12 @@ export default function SideNav() {
         <div>
           <p>Aquí pondremos el routing a:</p>
           <ul className="sidenav_links">
-            <li>
-              Home
-            </li>
-            <li>
-              Personajes
-            </li>
+            <Link to="/" className="navbar-logo">
+              <li>Home</li>
+            </Link>
+            <Link to="/characters" className="navbar-logo">
+              <li>Personajes</li>
+            </Link>
           </ul>
         </div>
       </Sidebar>

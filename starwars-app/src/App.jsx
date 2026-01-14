@@ -8,14 +8,15 @@ import "./App.css";
 function App() {
   return (
     <>
-      <div className="nav_div">
         <SideNav />
+      <div className="principal_card">Aqui podriamos poner el navbar</div>
+      <div className="nav_div">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/characters" element={<Characters />} />
         </Routes>
       </div>
-      <div className="principal_card">Aqui podriamos poner el navbar</div>
     </>
   );
 }
