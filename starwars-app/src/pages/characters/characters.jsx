@@ -1,7 +1,7 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-export default function char() {
+export default function Characters() {
   const data = [
     { name: "Luke Skywalker", height: "172", mass: "77" },
     { name: "Darth Vader", height: "202", mass: "136" },
