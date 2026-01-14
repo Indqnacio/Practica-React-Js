@@ -1,5 +1,5 @@
-const URL = "https://swapi.info/api/";
 import axios from "axios";
+const URL = "https://swapi.info/api/";
 
 export const get_all_characters = async () => {
   try {

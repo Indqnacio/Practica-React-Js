@@ -8,13 +8,6 @@ import { Link } from "react-router-dom";
 export default function SideNav() {
   const [visible, setVisible] = useState(false);
 
-  const customIcons = (
-    <React.Fragment>
-      <button className="p-sidebar-icon p-link mr-2">
-      </button>
-    </React.Fragment>
-  );
-
   const customHeader = (
     <div className="flex align-items-center gap-2">
       <Avatar
@@ -31,7 +24,6 @@ export default function SideNav() {
         header={customHeader}
         visible={visible}
         onHide={() => setVisible(false)}
-        icons={customIcons}
       >
         <div>
           <p>Aquí pondremos el routing a:</p>
