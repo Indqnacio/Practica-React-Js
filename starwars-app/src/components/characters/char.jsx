@@ -8,13 +8,11 @@ export default function char() {
     // Solo seran datos de prueba de momento para luego implementar la API
   ];
   return (
-    <PrimeReactProvider>
       <DataTable value={data} paginator rows={5}>
         <Column field="name" header="Name"></Column>
         <Column field="height" header="Height"></Column>
         <Column field="mass" header="Mass"></Column>
       </DataTable>
-    </PrimeReactProvider>
   );
 }
      

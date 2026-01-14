@@ -1,4 +1,3 @@
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Char from "../characters/char.jsx";
