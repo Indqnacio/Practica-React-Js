@@ -1,4 +1,4 @@
-import Home from "./components/home/home";
+import Home from "./pages/home/home.jsx";
 import { useState } from "react";
 import "./App.css";
 
