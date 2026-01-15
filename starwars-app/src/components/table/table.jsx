@@ -14,7 +14,11 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import "./table.css";
 import textToColor from "../../pipe/textToColor";
 
-export default function Characters_table({ characters, onNextPage, onPreviousPage }) {
+export default function Characters_table({
+  characters,
+  onNextPage,
+  onPreviousPage,
+}) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
   const onRowSelect = (event) => {
@@ -52,19 +56,17 @@ export default function Characters_table({ characters, onNextPage, onPreviousPag
 
   const HairBodyTemplate = (rowData) => {
     const bgColor = textToColor(rowData.hair_color);
-   
-    
-      return (
-        <div
-          className="badge_color"
-          style={{
-            backgroundColor: bgColor,
-          }}
-        >
-          {rowData.hair_color}
-        </div>
-      );
-    
+
+    return (
+      <div
+        className="badge_color"
+        style={{
+          backgroundColor: bgColor,
+        }}
+      >
+        {rowData.hair_color}
+      </div>
+    );
   };
   const SkinBodyTemplate = (rowData) => {
     const bgColor = textToColor(rowData.skin_color);
@@ -95,15 +97,6 @@ export default function Characters_table({ characters, onNextPage, onPreviousPag
     );
   };
 
-  //@ se pasara el valor 1 para moverse una sola pagina
-  const handleNextPage = () => {
-    debugger;
-    onNextPage(1);
-  }
-  const handlePreviousPage = () => {
-    debugger;
-    onPreviousPage(1);
-  }
   return (
     <div className="table_container">
       <Toast ref={toast} />
@@ -117,23 +110,10 @@ export default function Characters_table({ characters, onNextPage, onPreviousPag
         dataKey="name"
         onRowSelect={onRowSelect}
         metaKeySelection={true}
+        pageLinkSize={5}
         paginator
-        paginatorLeft={
-          <button
-            className="p-button p-component p-button-text p-button-plain"
-            onClick={handlePreviousPage}
-          >
-            Anterior
-          </button>
-        }
-        paginatorRight={
-          <button
-            className="p-button p-component p-button-text p-button-plain"
-            onClick={handleNextPage}
-          >
-            Siguiente
-          </button>
-        }
+        paginatorLeft={<div></div>}
+        paginatorRight={<p>{"Total de personajes:" + characters.length}</p>}
         rows={10}
       >
         <Column field="name" header="Nombre"></Column>
@@ -147,6 +127,7 @@ export default function Characters_table({ characters, onNextPage, onPreviousPag
           style={{ minWidth: "12rem" }}
           body={HairBodyTemplate}
         ></Column>
+
         <Column
           field="eye_color"
           header="Color de ojos"

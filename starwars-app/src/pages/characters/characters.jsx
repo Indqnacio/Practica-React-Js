@@ -22,7 +22,7 @@ export default function Characters() {
       showLoading();
       try {
         setLoading(true);
-        const data = await get_one_page_character(currentPage);
+        const data = await get_all_characters(currentPage);
         setCharacters(data);
         setPageInfo({
           count: data.count,
@@ -57,22 +57,12 @@ export default function Characters() {
         life: 3000,
       });
   }
- const handlePreviousPage = () => {  
-  debugger;  
-      console.log( "atras")
-      setCurrentPage(currentPage - 1)
-  }
-
-  const handleNextPage = () => {
-      console.log( "adelante")
-      setCurrentPage(currentPage + 1)
-  }
 
   return (
     <>
       <Toast ref={toast} />
 
-      <Characters_table characters={characters} onNextPage={handleNextPage} onPreviousPage={handlePreviousPage} />
+      <Characters_table characters={characters} />
     </>
   );
 }
