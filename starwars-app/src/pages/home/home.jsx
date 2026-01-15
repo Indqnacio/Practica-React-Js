@@ -5,7 +5,6 @@ import Characters from "./../characters/characters.jsx";
 export default function Home({ component, pageProps }) {
   return (
     <div>
-
       <h1>Aqui presentamos la pagina web</h1>
       <h2>Bienvenido al Star Wars Wiki</h2>
       <p>pondremos un carrousel para ver que informacion relevante hay.</p>

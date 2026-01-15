@@ -1,7 +1,7 @@
 import axios from "axios";
 const URL = "https://swapi.info/api/";
 
-export const get_all_characters = async (page=1) => {
+export const get_all_characters = async (page = 1) => {
   debugger;
   try {
     const result = await axios.get(`${URL}people/?page=${page}`);
@@ -19,6 +19,25 @@ export const get_character_by_id = async (id) => {
     return response.data;
   } catch (error) {
     console.error(`Error fetching character with id ${id}:`, error);
+    throw error;
+  }
+};
+// lo que espero que haga la funcion es evitar traerme todos los usuarios y mejor traer de diez en diez
+export const get_one_page_character = async (page) => {
+  const data = [];
+  try {
+    for (let i = page * 10; i > (page - 1) * 10; i--) {
+
+      const response = await axios.get(`${URL}people/${i}/`);
+      data.push(response.data);
+    }
+    debugger;
+    //verificar que se ordene DESC los personajes
+    data.reverse();
+    return data;
+
+  } catch (error) {
+    console.error(`Error fetching characters on page ${page}:`, error);
     throw error;
   }
 };

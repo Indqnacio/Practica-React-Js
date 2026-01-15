@@ -11,16 +11,15 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import "../components/table.css";
-import textToColor from "../pipe/textToColor";
+import "./table.css";
+import textToColor from "../../pipe/textToColor";
 
-export default function Characters_table({ characters }) {
+export default function Characters_table({ characters, onNextPage, onPreviousPage }) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
-
-  //al parecer el Toast son como los chips o las advertencias de angular
-  //en este caso el modal sera echo con un dialog, provisionalmente sera con el confirm
   const onRowSelect = (event) => {
+    //al parecer el Toast son como los chips o las advertencias de angular
+    //en este caso el modal sera echo con un dialog, provisionalmente sera con el confirm
     confirmDialog({
       message:
         "el personaje es " + event.data.name + ". ¿Desea ver mas detalles?",
@@ -53,26 +52,28 @@ export default function Characters_table({ characters }) {
 
   const HairBodyTemplate = (rowData) => {
     const bgColor = textToColor(rowData.hair_color);
-    return (
-      <div
-        className="badge_color"
-        style={{
-          backgroundColor: bgColor,
-        }}
-      >
-        {rowData.hair_color}
-      </div>
-    );
+   
+    
+      return (
+        <div
+          className="badge_color"
+          style={{
+            backgroundColor: bgColor,
+          }}
+        >
+          {rowData.hair_color}
+        </div>
+      );
+    
   };
   const SkinBodyTemplate = (rowData) => {
     const bgColor = textToColor(rowData.skin_color);
-   
+
     return (
       <div
         className="badge_color"
         style={{
           backgroundColor: bgColor,
-
         }}
       >
         {rowData.skin_color}
@@ -93,6 +94,16 @@ export default function Characters_table({ characters }) {
       </div>
     );
   };
+
+  //@ se pasara el valor 1 para moverse una sola pagina
+  const handleNextPage = () => {
+    debugger;
+    onNextPage(1);
+  }
+  const handlePreviousPage = () => {
+    debugger;
+    onPreviousPage(1);
+  }
   return (
     <div className="table_container">
       <Toast ref={toast} />
@@ -107,6 +118,22 @@ export default function Characters_table({ characters }) {
         onRowSelect={onRowSelect}
         metaKeySelection={true}
         paginator
+        paginatorLeft={
+          <button
+            className="p-button p-component p-button-text p-button-plain"
+            onClick={handlePreviousPage}
+          >
+            Anterior
+          </button>
+        }
+        paginatorRight={
+          <button
+            className="p-button p-component p-button-text p-button-plain"
+            onClick={handleNextPage}
+          >
+            Siguiente
+          </button>
+        }
         rows={10}
       >
         <Column field="name" header="Nombre"></Column>

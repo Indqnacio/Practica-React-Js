@@ -41,7 +41,7 @@ export default function textToColor(hairColor) {
       return mixedColorsToColor(colors);
 
     default:
-      return "rgb(0, 0, 0)";
+      return "#000000";
   }
 }
 function mixedColorsToColor(hairColors) {
@@ -49,13 +49,3 @@ function mixedColorsToColor(hairColors) {
   const color2 = hairColors[1].trim();
   return color1, color2;
 }
-/** case "brown, grey":
-    case "brown, gray":
-      return "#8B4513";
-    case "auburn, white":
-      return "#A52A2A";
-    case "auburn, grey":
-    case "auburn, gray":
-      return "#A52A2A";
-      
-      */

@@ -1,0 +1,22 @@
+.sidenav_links {
+  width: 100%;
+}
+
+.navBar {
+  position: sticky;
+  top: -1; /*distancia superior*/
+  z-index: 1; /*posiciona el elemento sobre los demás*/
+  background-color: rgb(255, 255, 255);
+  margin-top: 0%;
+    margin-bottom: 2%;
+}
+
+.navBar_Content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+}

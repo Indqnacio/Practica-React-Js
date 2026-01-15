@@ -1,7 +1,8 @@
-import Characters_table from "../../components/table";
-import { get_all_characters } from "../../services/swapi";
+import { get_all_characters, get_one_page_character } from "../../services/swapi";
 import { useState, useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
+
+import Characters_table from "../../components/table/table";
 
 export default function Characters() {
   const toast = useRef(null);
@@ -16,12 +17,12 @@ export default function Characters() {
   });
 
   useEffect(() => {
-    showLoading();
-    debugger;
+    //debugger;
     const fetchData = async () => {
+      showLoading();
       try {
         setLoading(true);
-        const data = await get_all_characters(currentPage);
+        const data = await get_one_page_character(currentPage);
         setCharacters(data);
         setPageInfo({
           count: data.count,
@@ -56,23 +57,22 @@ export default function Characters() {
         life: 3000,
       });
   }
- const handlePreviousPage = () => {
-    if (pageInfo.previous) {
+ const handlePreviousPage = () => {  
+  debugger;  
+      console.log( "atras")
       setCurrentPage(currentPage - 1)
-    }
   }
 
   const handleNextPage = () => {
-    if (pageInfo.next) {
+      console.log( "adelante")
       setCurrentPage(currentPage + 1)
-    }
   }
 
   return (
     <>
       <Toast ref={toast} />
 
-      <Characters_table characters={characters} />
+      <Characters_table characters={characters} onNextPage={handleNextPage} onPreviousPage={handlePreviousPage} />
     </>
   );
 }

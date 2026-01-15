@@ -1,15 +1,14 @@
 import Home from "./pages/home/home.jsx";
 import Characters from "./pages/characters/characters.jsx";
-import SideNav from "./components/sidenav.jsx";
 import { Routes, Route } from "react-router-dom";
 
 import "./App.css";
+import SideNav from "./components/sidenav/sidenav.jsx";
 
 function App() {
   return (
     <>
-        <SideNav />
-      <div className="principal_card">Aqui podriamos poner el navbar</div>
+      <SideNav />
       <div className="nav_div">
         <Routes>
           <Route path="/" element={<Home />} />
