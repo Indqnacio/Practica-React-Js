@@ -26,13 +26,14 @@ export default function Characters() {
       var data = [];
       try {
         setLoading(true);
+   
         if (currentPage === 1) {
           data = await get_all_characters(currentPage);
           setCharacters(data);
         }
         debugger;
         //** Codigo de prueba */
-        sendSearchPlanets(characters, currentPage);
+        await sendSearchPlanets(data, currentPage);
         const planetData = await get_planet_by_id(1);
         console.log(planetData);
         //** */
@@ -53,10 +54,30 @@ export default function Characters() {
     fetchData();
   }, [currentPage]);
 
-  function sendSearchPlanets(data, page) {
-    debugger;
-    console.log("pagina" + page + "Data recibida en characters.jsx: ", data);
+  async function sendSearchPlanets(data, page) {
+    const temporalData = [...data]; // Array de resultados
+    const oldId = {}; // Objeto simple
+    for (let i = (page - 1) * 10; i < (page * 10) && i < temporalData.length; i++) {
+      const planetId = temporalData[i].homeworld.match(/\d+/)[0];
+
+      if (oldId[planetId]) {
+        // Ya existe en caché
+        console.log("aqui no paso: "+planetId)
+        temporalData[i].homeworld = oldId[planetId];
+      } else {
+        // No existe, búscalo
+        const planetData = await get_planet_by_id(planetId);
+        debugger;
+        console.log("Esta es la informacion de 1 planeta: "+ planetData)
+        temporalData[i].homeworld = planetData.name;
+        oldId[planetId] = planetData.name; // Guardar en caché
+        
+      }
+    }
+    console.log(temporalData);
+    setCharacters(temporalData);
   }
+
   const showLoading = () => {
     toast.current.show({
       severity: "info",
