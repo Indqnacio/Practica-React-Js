@@ -16,8 +16,8 @@ import textToColor from "../../pipe/textToColor";
 
 export default function Characters_table({
   characters,
-  onNextPage,
-  onPreviousPage,
+  onPageChange,
+  totalRecords,
 }) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
@@ -108,14 +108,18 @@ export default function Characters_table({
         selection={selectedCharacter}
         onSelectionChange={(e) => setCharacter(e.value)}
         dataKey="name"
-        onRowSelect={onRowSelect}
+        onRowDoubleClick={onRowSelect}
         metaKeySelection={true}
-        pageLinkSize={5}
+        pageLinkSize={6}
         paginator
-        paginatorLeft={<div></div>}
+        paginatorLeft={<></>}
         paginatorRight={<p>{"Total de personajes:" + characters.length}</p>}
         rows={10}
-      >
+          
+        totalRecords={totalRecords}
+        onPage={(event) => {
+          onPageChange(event.page + 1);
+      }}>
         <Column field="name" header="Nombre"></Column>
         <Column field="height" header="Altura"></Column>
         <Column field="mass" header="peso"></Column>

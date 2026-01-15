@@ -1,4 +1,8 @@
-import { get_all_characters, get_one_page_character } from "../../services/swapi";
+import {
+  get_all_characters,
+  get_one_page_character,
+  get_planet_by_id,
+} from "../../services/swapi";
 import { useState, useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
 
@@ -17,24 +21,31 @@ export default function Characters() {
   });
 
   useEffect(() => {
-    //debugger;
     const fetchData = async () => {
       showLoading();
+      var data = [];
       try {
         setLoading(true);
-        const data = await get_all_characters(currentPage);
-        setCharacters(data);
+        if (currentPage === 1) {
+          data = await get_all_characters(currentPage);
+          setCharacters(data);
+        }
+        debugger;
+        //** Codigo de prueba */
+        sendSearchPlanets(characters, currentPage);
+        const planetData = await get_planet_by_id(1);
+        console.log(planetData);
+        //** */
         setPageInfo({
           count: data.count,
           next: data.next,
           previous: data.previous,
         });
-        console.log(data);
-        //verificar que si sirva
         showCorrectLoad();
         setError(null);
       } catch (err) {
         setError(err);
+        console.log("Error fetching characters:", err);
       } finally {
         setLoading(false);
       }
@@ -42,27 +53,38 @@ export default function Characters() {
     fetchData();
   }, [currentPage]);
 
-  const showLoading = () => {
-        toast.current.show({
-        severity: "info",
-        summary: "Cargando datos",
-        life: 3000,
-      });
+  function sendSearchPlanets(data, page) {
+    debugger;
+    console.log("pagina" + page + "Data recibida en characters.jsx: ", data);
   }
+  const showLoading = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Cargando datos",
+      life: 3000,
+    });
+  };
 
   const showCorrectLoad = () => {
-        toast.current.show({
-        severity: "success",
-        summary: "Datos cargados correctamente",
-        life: 3000,
-      });
-  }
+    toast.current.show({
+      severity: "success",
+      summary: "Datos cargados correctamente",
+      life: 3000,
+    });
+  };
 
   return (
     <>
       <Toast ref={toast} />
 
-      <Characters_table characters={characters} />
+      <Characters_table
+        characters={characters}
+        totalRecords={totalPages.count}
+        onPageChange={(page) => {
+          console.log("detectamos cambio");
+          setCurrentPage(page);
+        }}
+      />
     </>
   );
 }
