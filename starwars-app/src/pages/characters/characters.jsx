@@ -14,6 +14,7 @@ export default function Characters() {
   const [characters, setCharacters] = useState([]);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [test, setTest] = useState(0);
   const [totalPages, setPageInfo] = useState({
     count: 0,
     next: null,
@@ -23,20 +24,25 @@ export default function Characters() {
   useEffect(() => {
     const fetchData = async () => {
       showLoading();
-      var data = [];
+      var data;
       try {
         setLoading(true);
-   
+
         if (currentPage === 1) {
           data = await get_all_characters(currentPage);
           setCharacters(data);
+          setTest(test + 1);
+          await sendSearchPlanets(data,currentPage);
         }
-        debugger;
-        //** Codigo de prueba */
-        await sendSearchPlanets(data, currentPage);
-        const planetData = await get_planet_by_id(1);
-        console.log(planetData);
-        //** */
+        else{
+          //** Codigo de prueba */+
+          debugger
+          console.log(characters);
+          await sendSearchPlanets(characters, currentPage);
+          const planetData = await get_planet_by_id(1);
+          console.log(planetData);
+          //** */
+        }
         setPageInfo({
           count: data.count,
           next: data.next,
@@ -57,21 +63,21 @@ export default function Characters() {
   async function sendSearchPlanets(data, page) {
     const temporalData = [...data]; // Array de resultados
     const oldId = {}; // Objeto simple
-    for (let i = (page - 1) * 10; i < (page * 10) && i < temporalData.length; i++) {
+    for (
+      let i = (page - 1) * 10;
+      i < page * 10 && i < temporalData.length;
+      i++
+    ) {
       const planetId = temporalData[i].homeworld.match(/\d+/)[0];
 
       if (oldId[planetId]) {
         // Ya existe en caché
-        console.log("aqui no paso: "+planetId)
         temporalData[i].homeworld = oldId[planetId];
       } else {
         // No existe, búscalo
         const planetData = await get_planet_by_id(planetId);
-        debugger;
-        console.log("Esta es la informacion de 1 planeta: "+ planetData)
         temporalData[i].homeworld = planetData.name;
         oldId[planetId] = planetData.name; // Guardar en caché
-        
       }
     }
     console.log(temporalData);

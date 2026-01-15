@@ -33,6 +33,7 @@ export const get_planet_by_id = async (id) => {
   }
 };
 
+// No la estoy usando de momento
 // lo que espero que haga la funcion es evitar traerme todos los usuarios y mejor traer de diez en diez
 export const get_one_page_character = async (page) => {
   const data = [];

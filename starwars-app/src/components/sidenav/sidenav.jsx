@@ -11,9 +11,9 @@ export default function SideNav() {
   const [visible, setVisible] = useState(false);
 
   const customHeader = (
-    <div className="flex align-items-center gap-2">
+    <div className="logos">
       <Avatar image={logoImage} shape="circle" />
-      <span className="font-bold"> Star Wars Wiki</span>
+      <span> Star Wars Wiki</span>
     </div>
   );
 
@@ -30,14 +30,14 @@ export default function SideNav() {
           visible={visible}
           onHide={() => setVisible(false)}
         >
-          <div>
-            <p>Aquí pondremos el routing a:</p>
-            <ul className="sidenav_links">
+          <div className="sidenav_content">
+            <h3>Busquedas Principales:</h3>
+            <ul>
               <Link to="/" className="navbar-logo">
-                <li>Home</li>
+                <li className="text_link_sideNav">Home</li>
               </Link>
-              <Link to="/characters" className="navbar-logo">
-                <li>Personajes</li>
+              <Link to="/characters">
+                <li className="text_link_sideNav">Personajes</li>
               </Link>
             </ul>
           </div>

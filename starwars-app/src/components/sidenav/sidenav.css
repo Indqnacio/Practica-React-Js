@@ -8,7 +8,7 @@
   z-index: 1; /*posiciona el elemento sobre los demás*/
   background-color: rgb(255, 255, 255);
   margin-top: 0%;
-    margin-bottom: 2%;
+  margin-bottom: 2%;
 }
 
 .navBar_Content {
@@ -18,5 +18,33 @@
   background-color: #ffffff;
   padding: 10px 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.sidenav_content h3 {
+  color: rgb(112, 93, 93);
+  font-family: System-ui, Courier, monospace;
+  font-size: 2vh;
+}
 
+.text_link_sideNav {
+  margin-bottom: 2%;
+  font-weight: 600;
+  font-size: 2vh;
+  color: rgb(95, 79, 79);
+  font-family: System-ui, Courier, monospace;
+}
+.text_link_sideNav :hover {
+  color: rgb(112, 93, 93);
+}
+.logos{
+  gap: 10px;
+  width: 80%;
+  display: flex;
+}
+
+.logos span {
+  color: rgb(112, 93, 93);
+  font-family: System-ui, Courier, monospace;
+  font-size: 2.5vh;
+  margin-left: 2%;
+  font-weight: 600;
 }
