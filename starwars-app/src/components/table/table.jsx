@@ -49,25 +49,6 @@ export default function Characters_table({
     //en este caso el modal sera echo con un dialog, provisionalmente sera con el confirm
   };
 
-  //estos dos los borraremos
-  const accept = () => {
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmed",
-      detail: "You have accepted",
-      life: 3000,
-    });
-  };
-
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
-    });
-  };
-
   const HairBodyTemplate = (rowData) => {
     const bgColor = textToColor(rowData.hair_color);
 
@@ -131,6 +112,7 @@ export default function Characters_table({
       <Toast ref={toast} />
       <ConfirmDialog />
       <DataTable
+        lazy
         className="table_style"
         value={characters}
         selectionMode="single"
