@@ -5,17 +5,21 @@
 @podriamos agregar una pipeline para poner los colores correctamente
 */
 
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useState, useRef, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import "./table.css";
-import textToColor from "../../pipe/textToColor";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
+import "./table.css";
+
+import textToColor from "../../pipe/textToColor";
 import logoImage from "../../assets/images/logo_side_nav.png";
+import { get_films_by_id } from "../../services/films";
+import { get_starShip_by_id } from "../../services/starShips";
+import { get_vehicles_by_id } from "../../services/vehicles";
 
 export default function Characters_table({
   characters,
@@ -25,6 +29,7 @@ export default function Characters_table({
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [relatedData, setRelatedData] = useState(null);
 
   const footerContent = (
     <div>
@@ -37,16 +42,55 @@ export default function Characters_table({
     </div>
   );
 
-    const headerElement = (
-        <div className="inline-flex align-items-center justify-content-center gap-2">
-            <Avatar image={logoImage} shape="circle" />
-            <span className="font-bold white-space-nowrap">Amy Elsner</span>
-        </div>
-    );
+  const headerElement = (
+    <div className="inline-flex align-items-center justify-content-center gap-2">
+      <Avatar image={logoImage} shape="circle" />
+      <span className="font-bold white-space-nowrap">Amy Elsner</span>
+    </div>
+  );
 
-  const onRowSelect = (event) => {
-    //al parecer el Toast son como los chips o las advertencias de angular
-    //en este caso el modal sera echo con un dialog, provisionalmente sera con el confirm
+  const onRowSelect = async (character) => {
+    setCharacter(character);
+    setVisible(true);
+
+    // Obtiene información relacionada con los servicios específicos (films, etc.)
+    try {
+      const films = await Promise.all(
+        character.films.map((url) => get_films_by_id(extractIdFromURL(url)))
+      );
+      const starships = await Promise.all(
+        character.starships.map((url) =>
+          get_starShip_by_id(extractIdFromURL(url))
+        )
+      );
+      const vehicles = await Promise.all(
+        character.vehicles.map((url) =>
+          get_vehicles_by_id(extractIdFromURL(url))
+        )
+      );
+
+      /**
+       * Extrae ID desde el URL
+       * @param {string} url URL del servicio de SWAPI
+       * @returns {string} ID extraído del URL
+       */
+      setRelatedData({ films, starships, vehicles });
+      toast.current.show({
+        severity: "success",
+        detail: "Datos relacionados cargados correctamente",
+      });
+    } catch (err) {
+      toast.current.show({
+        severity: "error",
+        detail: "Error al cargar datos relacionados",
+      });
+      console.error(err);
+    }
+  };
+
+  const extractIdFromURL = (url) => {
+    const parts = url.split("/").filter(Boolean);
+    return parts[parts.length - 1];
   };
 
   const HairBodyTemplate = (rowData) => {
@@ -94,6 +138,8 @@ export default function Characters_table({
 
   return (
     <div className="table_container">
+
+      {/* ESTO DEBERIAMOS SEPARARLO EN UN COMPONENTE*/}
       <Dialog
         visible={visible}
         modal
@@ -105,14 +151,34 @@ export default function Characters_table({
           setVisible(false);
         }}
       >
-        <p className="m-0">
-            INFO
-        </p>
+        <div>
+          <h2>{selectedCharacter?.name}</h2>
+          <p>
+            <strong>Altura:</strong> {selectedCharacter?.height} cm
+          </p>
+          <h3>Películas</h3>
+          <ul>
+            {relatedData?.films?.map((film, index) => (
+              <li key={index}>{film.title}</li>
+            ))}
+          </ul>
+          <h3>Naves espaciales</h3>
+          <ul>
+            {relatedData?.starships?.map((starship, index) => (
+              <li key={index}>{starship.name}</li>
+            ))}
+          </ul>
+          <h3>Vehículos</h3>
+          <ul>
+            {relatedData?.vehicles?.map((vehicle, index) => (
+              <li key={index}>{vehicle.name}</li>
+            ))}
+          </ul>
+        </div>
       </Dialog>
       <Toast ref={toast} />
       <ConfirmDialog />
       <DataTable
-        lazy
         className="table_style"
         value={characters}
         selectionMode="single"
