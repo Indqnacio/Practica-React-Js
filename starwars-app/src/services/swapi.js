@@ -2,9 +2,9 @@ import axios from "axios";
 const URL = "https://swapi.info/api/";
 const res = "Fallo su conexion a internet comuniquese con el equipo de INDQ, id:"; 
 
-export const get_all_characters = async (page = 1) => {
+export const get_all_characters = async () => {
   try {
-    const result = await axios.get(`${URL}people/?page=${page}`);
+    const result = await axios.get(`${URL}people`);
     return result.data;
   } catch (err) {
     throw new Error(

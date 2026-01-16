@@ -1,18 +1,16 @@
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import Characters from "./../characters/characters.jsx";
 import CarouselWeb from "../../components/carousel/carousel.jsx";
-
+import './home.css'
 export default function Home({ component, pageProps }) {
   return (
-    <div>
-      <h1>Aqui presentamos la pagina web</h1>
-      <h2>Bienvenido al Star Wars Wiki</h2>
-      <p>pondremos un carrousel para ver que informacion relevante hay.</p>
-    {/* <Characters /> */}
+    <>
+      <div className="divPrinc">
+        <h1>INDQ STAR WARS</h1>
+        <h1 style={{ color: "#fff", marginBottom: "20px" }}>Home</h1>
+        <h2>Bienvenido al Star Wars Wiki, par poder ver todo lo relacionado de tus personajes favoritos</h2>
+      {/* <Characters /> */}
       <CarouselWeb />
-    </div>
+      </div>
+    </>
   );
 }
-
 

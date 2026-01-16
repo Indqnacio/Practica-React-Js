@@ -1,11 +1,13 @@
 /*
-@En este caso me falta todavia poner el color de pelo con color
+@El paginador sigue fallando debo corregirlo todavia
+@podriamos agregar una pipeline para poner los colores correctamente(falta ver si conviene usar canvas y el otro metodo)
+@Finalmente falta agregar el buscador (que funcione)
+
+@En este caso me falta todavia poner el color de pelo con color(ya)
 @Tambien falta hacer que al darle click a una fila salga un modal con mas informacion del personaje
-@Finalmente falta agregar el buscador
-@podriamos agregar una pipeline para poner los colores correctamente
 */
 
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import { useState, useRef, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -13,6 +15,10 @@ import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
+import { IconField } from "primereact/iconfield";
+import { InputText } from "primereact/inputtext";
+import { InputIcon } from "primereact/inputicon";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
 import "./table.css";
 
 import textToColor from "../../pipe/textToColor";
@@ -30,6 +36,14 @@ export default function Characters_table({
   const toast = useRef(null);
   const [visible, setVisible] = useState(false);
   const [relatedData, setRelatedData] = useState(null);
+  //? Variable de estado para el buscador
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  /*
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  });
+   */
 
   const footerContent = (
     <div>
@@ -45,7 +59,7 @@ export default function Characters_table({
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
       <Avatar image={logoImage} shape="circle" />
-      <span className="font-bold white-space-nowrap">Amy Elsner</span>
+      <span className="font-bold white-space-nowrap">Mas Informacion</span>
     </div>
   );
 
@@ -55,6 +69,7 @@ export default function Characters_table({
 
     // Obtiene información relacionada con los servicios específicos (films, etc.)
     try {
+      //necesito investigar si el promise es la mejor opcion
       const films = await Promise.all(
         character.films.map((url) => get_films_by_id(extractIdFromURL(url)))
       );
@@ -69,11 +84,6 @@ export default function Characters_table({
         )
       );
 
-      /**
-       * Extrae ID desde el URL
-       * @param {string} url URL del servicio de SWAPI
-       * @returns {string} ID extraído del URL
-       */
       setRelatedData({ films, starships, vehicles });
       toast.current.show({
         severity: "success",
@@ -136,10 +146,33 @@ export default function Characters_table({
     );
   };
 
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+    _filters["global"].value = value;
+    setGlobalFilterValue(value);
+  };
+
+  //? Es el header que aparece en la tabla
+  const renderHeader = () => {
+    return (
+      <div className="flex justify-content-end">
+        <IconField iconPosition="left">
+          <InputIcon className="pi pi-search" />
+          <InputText
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            placeholder="Buscar personaje"
+          />
+        </IconField>
+      </div>
+    );
+  };
+
+  const header = renderHeader();
   return (
     <div className="table_container">
-
-      {/* ESTO DEBERIAMOS SEPARARLO EN UN COMPONENTE*/}
+      {/* ESTO DEBERIA SEPARARLO EN UN COMPONENTE*/}
       <Dialog
         visible={visible}
         modal
@@ -178,16 +211,22 @@ export default function Characters_table({
       </Dialog>
       <Toast ref={toast} />
       <ConfirmDialog />
+
       <DataTable
         className="table_style"
+        /* Header Buscar */
+        globalFilterFields={["name"]}
+        emptyMessage="No customers found."
+        header={header}
+        /* */
         value={characters}
         selectionMode="single"
         selection={selectedCharacter}
         onSelectionChange={(e) => setCharacter(e.value)}
         dataKey="name"
-        onRowDoubleClick={() => setVisible(true)}
+        onRowDoubleClick={() => onRowSelect(selectedCharacter)}
         metaKeySelection={true}
-        pageLinkSize={6}
+        pageLinkSize={10}
         paginator
         paginatorLeft={<></>}
         paginatorRight={<p>{"Total de personajes:" + characters.length}</p>}
@@ -226,7 +265,6 @@ export default function Characters_table({
           style={{ minWidth: "12rem" }}
           body={SkinBodyTemplate}
         ></Column>
-        <Column field="skin_color" header="Color de piel"></Column>
         <Column field="birth_year" header="Año de nacimiento"></Column>
         <Column field="gender" header="genero"></Column>
         <Column field="homeworld" header="Planeta de origen"></Column>

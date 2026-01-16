@@ -9,17 +9,18 @@ import { Toast } from "primereact/toast";
 import Characters_table from "../../components/table/table";
 
 export default function Characters() {
+  const ROWS = 10;
   const toast = useRef(null);
-  const [loading, setLoading] = useState(true);
-  const [characters, setCharacters] = useState([]);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [test, setTest] = useState(0);
-  const [totalPages, setPageInfo] = useState({
-    count: 0,
-    next: null,
-    previous: null,
-  });
+
+  //? Aqui tenemos todos los characters NO SE ENVIA
+  const [allCharacters, setAllCharacters] = useState([]);
+
+  //! ESTA SI SE ENVIA
+  const [characters, setCharacters] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,34 +28,24 @@ export default function Characters() {
       var data;
       try {
         setLoading(true);
-
-        if (currentPage === 1) {
-          data = await get_all_characters(currentPage);
-          setCharacters(data);
+        if (test === 0) {
+          data = await get_all_characters();
+          setAllCharacters(data);
           setTest(test + 1);
-          await sendSearchPlanets(data, currentPage);
-          setPageInfo({
-            count: data.count,
-            next: data.next,
-            previous: data.previous,
-          });
-        } else {
-          console.log(characters);
-          await sendSearchPlanets(characters, currentPage);
-          const planetData = await get_planet_by_id(1);
-          console.log(planetData);
-          setPageInfo({
-            count: characters.count,
-            next: characters.next,
-            previous: characters.previous,
-          });
-        }
+          // primera página
+          const firstPage = data.slice(0, ROWS);
+          await sendSearchPlanets(firstPage);
+          console.log("char10: "+characters)
+        } else{ await sendSearchPlanets(allCharacters);}
 
         showCorrectLoad();
         setError(null);
       } catch (err) {
         setError(err);
-        console.log("Error fetching characters:", err);
+        toast.current.show({
+          severity: "error",
+          summary: "Error al cargar personajes" + error,
+        });
       } finally {
         setLoading(false);
       }
@@ -63,10 +54,11 @@ export default function Characters() {
   }, [currentPage]);
 
   //*Este es el metodo para convertir los planetas en URL de los arrays en nombres
-  async function sendSearchPlanets(data, page) {
-    const temporalData = [...data]; // Array de resultados
-    const oldId = {}; // Objeto simple
-    for (let i = (page - 1) * 10; i < page * 10; i++) {
+  async function sendSearchPlanets(data) {
+    debugger
+    const temporalData = [...data]; 
+    const oldId = {}; 
+    for (let i = 0; i < temporalData.length; i++) {
       const planetId = temporalData[i].homeworld.match(/\d+/)[0];
 
       if (oldId[planetId]) {
@@ -76,10 +68,11 @@ export default function Characters() {
         //! No existe, búscalo
         const planetData = await get_planet_by_id(planetId);
         temporalData[i].homeworld = planetData.name;
-        oldId[planetId] = planetData.name; 
+        oldId[planetId] = planetData.name;
       }
     }
     setCharacters(temporalData);
+    console.log(allCharacters.length+" Es el tamaño y tenemos "+characters)
   }
 
   const showLoading = () => {
@@ -104,10 +97,15 @@ export default function Characters() {
 
       <Characters_table
         characters={characters}
-        totalRecords={totalPages.count}
+        totalRecords={allCharacters.length}
         onPageChange={(page) => {
-          console.log("detectamos cambio");
           setCurrentPage(page);
+
+          const start = (page - 1) * ROWS;
+          const end = page * ROWS;
+
+          const pageData = allCharacters.slice(start, end);
+          sendSearchPlanets(pageData, page);
         }}
       />
     </>

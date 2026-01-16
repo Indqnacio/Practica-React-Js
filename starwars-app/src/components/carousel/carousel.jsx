@@ -54,7 +54,6 @@ export default function CarouselWeb()
   return (
   <Fragment>
      <div className="carousel-container">
-        <h2 style={{ color: "#fff", marginBottom: "20px" }}>Departamentos</h2>
         <Carousel
           value={departments}
           itemTemplate={departmentTemplate}
@@ -62,7 +61,7 @@ export default function CarouselWeb()
           numScroll={1}
           responsiveOptions={responsiveOptions}
           circular
-          autoplayInterval={2000}
+          autoplayInterval={5000}
         />
       </div>
   </Fragment>);
