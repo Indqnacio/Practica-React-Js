@@ -32,22 +32,24 @@ export default function Characters() {
           data = await get_all_characters(currentPage);
           setCharacters(data);
           setTest(test + 1);
-          await sendSearchPlanets(data,currentPage);
-        }
-        else{
-          //** Codigo de prueba */+
-          debugger
+          await sendSearchPlanets(data, currentPage);
+          setPageInfo({
+            count: data.count,
+            next: data.next,
+            previous: data.previous,
+          });
+        } else {
           console.log(characters);
           await sendSearchPlanets(characters, currentPage);
           const planetData = await get_planet_by_id(1);
           console.log(planetData);
-          //** */
+          setPageInfo({
+            count: characters.count,
+            next: characters.next,
+            previous: characters.previous,
+          });
         }
-        setPageInfo({
-          count: data.count,
-          next: data.next,
-          previous: data.previous,
-        });
+
         showCorrectLoad();
         setError(null);
       } catch (err) {
@@ -60,27 +62,23 @@ export default function Characters() {
     fetchData();
   }, [currentPage]);
 
+  //*Este es el metodo para convertir los planetas en URL de los arrays en nombres
   async function sendSearchPlanets(data, page) {
     const temporalData = [...data]; // Array de resultados
     const oldId = {}; // Objeto simple
-    for (
-      let i = (page - 1) * 10;
-      i < page * 10 && i < temporalData.length;
-      i++
-    ) {
+    for (let i = (page - 1) * 10; i < page * 10; i++) {
       const planetId = temporalData[i].homeworld.match(/\d+/)[0];
 
       if (oldId[planetId]) {
-        // Ya existe en caché
+        //! Ya existe en caché
         temporalData[i].homeworld = oldId[planetId];
       } else {
-        // No existe, búscalo
+        //! No existe, búscalo
         const planetData = await get_planet_by_id(planetId);
         temporalData[i].homeworld = planetData.name;
-        oldId[planetId] = planetData.name; // Guardar en caché
+        oldId[planetId] = planetData.name; 
       }
     }
-    console.log(temporalData);
     setCharacters(temporalData);
   }
 

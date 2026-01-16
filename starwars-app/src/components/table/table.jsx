@@ -1,6 +1,5 @@
 /*
 @En este caso me falta todavia poner el color de pelo con color
-@Ademas falta que el planeta de origen aparezca como informacion legible
 @Tambien falta hacer que al darle click a una fila salga un modal con mas informacion del personaje
 @Finalmente falta agregar el buscador
 @podriamos agregar una pipeline para poner los colores correctamente
@@ -13,6 +12,10 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import "./table.css";
 import textToColor from "../../pipe/textToColor";
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
+import { Avatar } from "primereact/avatar";
+import logoImage from "../../assets/images/logo_side_nav.png";
 
 export default function Characters_table({
   characters,
@@ -21,18 +24,29 @@ export default function Characters_table({
 }) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  const footerContent = (
+    <div>
+      <Button
+        label="Ok"
+        icon="pi pi-check"
+        onClick={() => setVisible(false)}
+        autoFocus
+      />
+    </div>
+  );
+
+    const headerElement = (
+        <div className="inline-flex align-items-center justify-content-center gap-2">
+            <Avatar image={logoImage} shape="circle" />
+            <span className="font-bold white-space-nowrap">Amy Elsner</span>
+        </div>
+    );
+
   const onRowSelect = (event) => {
     //al parecer el Toast son como los chips o las advertencias de angular
     //en este caso el modal sera echo con un dialog, provisionalmente sera con el confirm
-    confirmDialog({
-      message:
-        "el personaje es " + event.data.name + ". ¿Desea ver mas detalles?",
-      header: "Ver mas detalles",
-      icon: "pi pi-eye",
-      defaultFocus: "accept",
-      reject,
-      accept,
-    });
   };
 
   //estos dos los borraremos
@@ -99,6 +113,21 @@ export default function Characters_table({
 
   return (
     <div className="table_container">
+      <Dialog
+        visible={visible}
+        modal
+        footer={footerContent}
+        header={headerElement}
+        style={{ width: "50rem" }}
+        onHide={() => {
+          if (!visible) return;
+          setVisible(false);
+        }}
+      >
+        <p className="m-0">
+            INFO
+        </p>
+      </Dialog>
       <Toast ref={toast} />
       <ConfirmDialog />
       <DataTable
@@ -108,18 +137,18 @@ export default function Characters_table({
         selection={selectedCharacter}
         onSelectionChange={(e) => setCharacter(e.value)}
         dataKey="name"
-        onRowDoubleClick={onRowSelect}
+        onRowDoubleClick={() => setVisible(true)}
         metaKeySelection={true}
         pageLinkSize={6}
         paginator
         paginatorLeft={<></>}
         paginatorRight={<p>{"Total de personajes:" + characters.length}</p>}
         rows={10}
-          
         totalRecords={totalRecords}
         onPage={(event) => {
           onPageChange(event.page + 1);
-      }}>
+        }}
+      >
         <Column field="name" header="Nombre"></Column>
         <Column field="height" header="Altura"></Column>
         <Column field="mass" header="peso"></Column>

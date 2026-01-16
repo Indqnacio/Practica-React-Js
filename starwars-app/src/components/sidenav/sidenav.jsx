@@ -22,6 +22,7 @@ export default function SideNav() {
       <div className="navBar">
         <div className="navBar_Content">
           <Button icon="pi pi-align-justify" onClick={() => setVisible(true)} />
+            <p>INDQ STAR WARS</p>
         </div>
       </div>
       <div className="card flex justify-content-center">
