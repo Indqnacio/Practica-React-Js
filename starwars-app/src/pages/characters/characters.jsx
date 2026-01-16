@@ -71,6 +71,7 @@ export default function Characters() {
       }
     }
     setCharacters(temporalData);
+    setTest(test + 1);
   }
 
   const showLoading = () => {
@@ -97,7 +98,7 @@ export default function Characters() {
         characters={characters}
         totalRecords={allCharacters.length}
         onPageChange={(page) => {
-          setCurrentPage(6);
+          setCurrentPage(page);
           const start = (page) * ROWS;
           const end = (page+ 1) * ROWS;
 
