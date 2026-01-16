@@ -28,6 +28,7 @@ import { get_starShip_by_id } from "../../services/starShips";
 import { get_vehicles_by_id } from "../../services/vehicles";
 
 export default function Characters_table({
+  number,
   characters,
   onPageChange,
   totalRecords,
@@ -213,26 +214,27 @@ export default function Characters_table({
       <ConfirmDialog />
 
       <DataTable
-        className="table_style"
+        lazy  
         /* Header Buscar */
         globalFilterFields={["name"]}
         emptyMessage="No customers found."
         header={header}
         /* */
-        value={characters}
         selectionMode="single"
+        className="table_style"
+        totalRecords={totalRecords}
+        value={characters}
         selection={selectedCharacter}
         onSelectionChange={(e) => setCharacter(e.value)}
         dataKey="name"
         onRowDoubleClick={() => onRowSelect(selectedCharacter)}
         metaKeySelection={true}
-        pageLinkSize={10}
         paginator
         paginatorLeft={<></>}
-        paginatorRight={<p>{"Total de personajes:" + characters.length}</p>}
+        paginatorRight={<p>{"Total de personajes:" + totalRecords}</p>}
         rows={10}
-        totalRecords={totalRecords}
         onPage={(event) => {
+          console.log("Pagina solicitada:", event.page + 1);
           onPageChange(event.page + 1);
         }}
       >

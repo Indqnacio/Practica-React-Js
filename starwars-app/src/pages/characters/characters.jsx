@@ -23,41 +23,40 @@ export default function Characters() {
   const [characters, setCharacters] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      showLoading();
-      var data;
-      try {
-        setLoading(true);
-        if (test === 0) {
-          data = await get_all_characters();
-          setAllCharacters(data);
-          setTest(test + 1);
-          // primera página
-          const firstPage = data.slice(0, ROWS);
-          await sendSearchPlanets(firstPage);
-          console.log("char10: "+characters)
-        } else{ await sendSearchPlanets(allCharacters);}
-
-        showCorrectLoad();
-        setError(null);
-      } catch (err) {
-        setError(err);
-        toast.current.show({
-          severity: "error",
-          summary: "Error al cargar personajes" + error,
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
-  }, [currentPage]);
+  }, []);
+
+
+  const fetchData = async () => {
+    var data;
+    try {
+      setLoading(true);
+
+      data = await get_all_characters();
+      setAllCharacters(data);
+
+      setTest(test + 1);
+      // primera página
+      const firstPage = data.slice(0, ROWS);
+      await sendSearchPlanets(firstPage);
+
+      //showCorrectLoad();
+      setError(null);
+    } catch (err) {
+      setError(err);
+      toast.current.show({
+        severity: "error",
+        summary: "Error al cargar personajes" + error,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //*Este es el metodo para convertir los planetas en URL de los arrays en nombres
   async function sendSearchPlanets(data) {
-    debugger
-    const temporalData = [...data]; 
-    const oldId = {}; 
+    const temporalData = [...data];
+    const oldId = {};
     for (let i = 0; i < temporalData.length; i++) {
       const planetId = temporalData[i].homeworld.match(/\d+/)[0];
 
@@ -72,7 +71,6 @@ export default function Characters() {
       }
     }
     setCharacters(temporalData);
-    console.log(allCharacters.length+" Es el tamaño y tenemos "+characters)
   }
 
   const showLoading = () => {
@@ -99,13 +97,13 @@ export default function Characters() {
         characters={characters}
         totalRecords={allCharacters.length}
         onPageChange={(page) => {
-          setCurrentPage(page);
-
-          const start = (page - 1) * ROWS;
-          const end = page * ROWS;
+          setCurrentPage(6);
+          const start = (page) * ROWS;
+          const end = (page+ 1) * ROWS;
 
           const pageData = allCharacters.slice(start, end);
-          sendSearchPlanets(pageData, page);
+          setCharacters(pageData)
+          sendSearchPlanets(pageData);
         }}
       />
     </>
