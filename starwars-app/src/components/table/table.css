@@ -7,7 +7,6 @@
   border-color: rgb(214, 0, 0);
   padding: 5px 10px;
   font-weight: 500;
- 
 }
 .table_style {
   margin: auto;
@@ -16,4 +15,13 @@
 .table_container {
   width: 80%;
   margin: auto;
+}
+
+.input_search {
+  display: flex; 
+  justify-content: right;
+}
+.input_search Datatable {
+  background-color: red;
+  width: 80%;
 }

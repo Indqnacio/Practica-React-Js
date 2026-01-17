@@ -28,10 +28,13 @@ import { get_starShip_by_id } from "../../services/starShips";
 import { get_vehicles_by_id } from "../../services/vehicles";
 
 export default function Characters_table({
-  number,
+  allCharactersName,
   characters,
   onPageChange,
   totalRecords,
+  currentPage=1,
+  rows=10,
+  number,
 }) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
@@ -39,13 +42,16 @@ export default function Characters_table({
   const [relatedData, setRelatedData] = useState(null);
   //? Variable de estado para el buscador
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  /*
+  
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    name: { value: characters.name, matchMode: FilterMatchMode.STARTS_WITH },
   });
-   */
+   
 
+  useEffect(() => {
+    console.log("characters in the table are: " + characters);
+  }, [characters]);
   const footerContent = (
     <div>
       <Button
@@ -148,6 +154,7 @@ export default function Characters_table({
   };
 
   const onGlobalFilterChange = (e) => {
+    debugger
     const value = e.target.value;
     let _filters = { ...filters };
     _filters["global"].value = value;
@@ -157,7 +164,7 @@ export default function Characters_table({
   //? Es el header que aparece en la tabla
   const renderHeader = () => {
     return (
-      <div className="flex justify-content-end">
+      <div className="input_search">
         <IconField iconPosition="left">
           <InputIcon className="pi pi-search" />
           <InputText
@@ -171,6 +178,8 @@ export default function Characters_table({
   };
 
   const header = renderHeader();
+
+  const first = (currentPage - 1) * rows;
   return (
     <div className="table_container">
       {/* ESTO DEBERIA SEPARARLO EN UN COMPONENTE*/}
@@ -214,7 +223,9 @@ export default function Characters_table({
       <ConfirmDialog />
 
       <DataTable
-        lazy  
+        lazy
+        first={first}
+        rows={rows}
         /* Header Buscar */
         globalFilterFields={["name"]}
         emptyMessage="No customers found."
@@ -230,9 +241,8 @@ export default function Characters_table({
         onRowDoubleClick={() => onRowSelect(selectedCharacter)}
         metaKeySelection={true}
         paginator
-        paginatorLeft={<></>}
+        paginatorLeft={<p>{first+"-"+(first+rows)}</p>}
         paginatorRight={<p>{"Total de personajes:" + totalRecords}</p>}
-        rows={10}
         onPage={(event) => {
           console.log("Pagina solicitada:", event.page + 1);
           onPageChange(event.page + 1);

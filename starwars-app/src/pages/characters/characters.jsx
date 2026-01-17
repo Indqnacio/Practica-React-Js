@@ -71,7 +71,7 @@ export default function Characters() {
       }
     }
     setCharacters(temporalData);
-    setTest(test + 1);
+    setTest(test + 1);  
   }
 
   const showLoading = () => {
@@ -95,15 +95,17 @@ export default function Characters() {
       <Toast ref={toast} />
 
       <Characters_table
+        allCharactersName={allCharacters}
         characters={characters}
         totalRecords={allCharacters.length}
+        currentPage={currentPage}
+        rows={ROWS}
         onPageChange={(page) => {
           setCurrentPage(page);
-          const start = (page) * ROWS;
-          const end = (page+ 1) * ROWS;
-
+          const start = (page - 1) * ROWS;
+          const end = page * ROWS;
           const pageData = allCharacters.slice(start, end);
-          setCharacters(pageData)
+          setCharacters(pageData);
           sendSearchPlanets(pageData);
         }}
       />
