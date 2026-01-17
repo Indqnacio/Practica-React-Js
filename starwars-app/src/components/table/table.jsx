@@ -112,6 +112,7 @@ export default function Characters_table({
 
   const HairBodyTemplate = (rowData) => {
     const bgColor = textToColor(rowData.hair_color);
+    //AQUI PODRIA PONER PARA QUE YA CORRIGA LOS COLORES const color= 
 
     return (
       <div

@@ -44,6 +44,11 @@ export default function textToColor(hairColor) {
       return "#301c1c";
   }
 }
+export function principalColor(textColor){
+const obj= normalizedText(textColor)
+
+
+}
 
 function nombreAHex(colorNombre) {
     const ctx = document.createElement('canvas').getContext('2d');
@@ -57,8 +62,16 @@ function mixedColorsToColor(hairColors) {
   return color1, color2;
 }
 
-function normalizedText(){
-  
+function normalizedText(text){
+  //convertimos en minuscula
+  const normalizado = text.toLowerCase().trim();
+  //probar si realmente quita espacios en blanco
+  normalizado= normalizado.replace(/\s+/g, ''); 
+  //white,red,green
+  textoFinal= normalizado.split(",");
+  //[[white][red][green]]
+
+
 }
 
 function obtenerHexSeguro(nombre) {

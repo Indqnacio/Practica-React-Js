@@ -16,6 +16,7 @@ export default function Characters() {
   const [loading, setLoading] = useState(true);
   const [test, setTest] = useState(0);
   const [charsSearched, setCharsSearched] = useState(0);
+  //const [totalData, setTotalData] = useState(allCharacters.length);
 
   //? Aqui tenemos todos los characters NO SE ENVIA
   const [allCharacters, setAllCharacters] = useState([]);
@@ -29,7 +30,10 @@ export default function Characters() {
     try {
       //showLoading();
       setLoading(true);
-      if (pageCharacters.length === 0) {setLoading(false); return;}
+      if (pageCharacters.length === 0) {
+        setLoading(false);
+        return;
+      }
       sendSearchPlanets(pageCharacters);
     } finally {
     }
@@ -101,6 +105,10 @@ export default function Characters() {
         setCharacters(searchAll(text));
         break;
     }
+    /**
+    setCurrentPage(1)
+    setTotalData(Characters.length)
+    * */
     setCharsSearched(text.length);
   }
 
@@ -126,11 +134,11 @@ export default function Characters() {
   function showAllblankInput() {
     setCharacters(allCharacters);
     ShowAllMessage();
-    
-    setLoading(false)
+
+    setLoading(false);
     //falta reiniciar contadores como la pagina, verificar cuales
     setCurrentPage(1);
-    setPageCharacters([])
+    setPageCharacters([]);
   }
 
   const showLoading = (e) => {
@@ -177,8 +185,10 @@ export default function Characters() {
         needToFilter={(words) => {
           //en este caso mejor se filtra aqui, imposible si la tabla se encarga
 
-          if (words == "") {showAllblankInput(); setLoading(false)}
-          else filterCharactersByName(words);
+          if (words == "") {
+            showAllblankInput();
+            setLoading(false);
+          } else filterCharactersByName(words);
         }}
         onPageChange={(page) => {
           setCurrentPage(page);
