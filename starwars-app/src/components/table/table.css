@@ -20,6 +20,7 @@
 .input_search {
   display: flex; 
   justify-content: right;
+  width: 100%;
 }
 .input_search Datatable {
   background-color: red;

@@ -15,6 +15,7 @@ export default function Characters() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [test, setTest] = useState(0);
+  const [charsSearched, setCharsSearched] = useState(0);
 
   //? Aqui tenemos todos los characters NO SE ENVIA
   const [allCharacters, setAllCharacters] = useState([]);
@@ -25,13 +26,13 @@ export default function Characters() {
   const [pageCharacters, setPageCharacters] = useState([]);
 
   useEffect(() => {
-    showLoading()
-    
-    setLoading(true);
-    setTest(test + 1);
-    if (pageCharacters.length === 0) return;
-    sendSearchPlanets(pageCharacters);
-    setLoading(false);
+    try {
+      //showLoading();
+      setLoading(true);
+      if (pageCharacters.length === 0) {setLoading(false); return;}
+      sendSearchPlanets(pageCharacters);
+    } finally {
+    }
   }, [pageCharacters]);
 
   useEffect(() => {
@@ -54,11 +55,7 @@ export default function Characters() {
       //showCorrectLoad();
       setError(null);
     } catch (err) {
-      setError(err);
-      toast.current.show({
-        severity: "error",
-        summary: "Error al cargar personajes" + error,
-      });
+      showError(err);
     } finally {
       setLoading(false);
     }
@@ -91,12 +88,55 @@ export default function Characters() {
     setCharacters(temporalData);
     setTest(test + 1);
     showCorrectLoad();
+    setLoading(false);
   }
 
-  const showLoading = () => {
+  function filterCharactersByName(text) {
+    const op = text.length - (charsSearched + 1);
+    switch (op) {
+      case 0:
+        setCharacters(searchPart(text, characters));
+        break;
+      default:
+        setCharacters(searchAll(text));
+        break;
+    }
+    setCharsSearched(text.length);
+  }
+
+  function searchAll(text) {
+    const temporalCharacters = [];
+    allCharacters.forEach((chars) => {
+      if (chars.name.slice(0, text.length).toLowerCase() == text) {
+        temporalCharacters.push(chars);
+      }
+    });
+    return temporalCharacters;
+  }
+
+  function searchPart(text, characters) {
+    const temporalCharacters = [];
+    characters.forEach((chars) => {
+      if (chars.name.slice(0, text.length).toLowerCase() == text) {
+        temporalCharacters.push(chars);
+      }
+    });
+    return temporalCharacters;
+  }
+  function showAllblankInput() {
+    setCharacters(allCharacters);
+    ShowAllMessage();
+    
+    setLoading(false)
+    //falta reiniciar contadores como la pagina, verificar cuales
+    setCurrentPage(1);
+    setPageCharacters([])
+  }
+
+  const showLoading = (e) => {
     toast.current.show({
       severity: "info",
-      summary: "Cargando datos",
+      summary: "Cargando datos ",
       life: 3000,
     });
   };
@@ -106,6 +146,20 @@ export default function Characters() {
       severity: "success",
       summary: "Datos cargados correctamente",
       life: 3000,
+    });
+  };
+
+  const showError = (error) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Error al cargar personajes",
+    });
+  };
+
+  const ShowAllMessage = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Se muestran todos los usuarios",
     });
   };
 
@@ -122,12 +176,17 @@ export default function Characters() {
         rows={ROWS}
         needToFilter={(words) => {
           //en este caso mejor se filtra aqui, imposible si la tabla se encarga
+
+          if (words == "") {showAllblankInput(); setLoading(false)}
+          else filterCharactersByName(words);
         }}
         onPageChange={(page) => {
           setCurrentPage(page);
+          setLoading(true);
           const start = (page - 1) * ROWS;
           const end = page * ROWS;
           const pageData = allCharacters.slice(start, end);
+          setLoading(false);
           setPageCharacters(pageData);
         }}
       />

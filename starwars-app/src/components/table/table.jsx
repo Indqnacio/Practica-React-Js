@@ -43,7 +43,7 @@ export default function Characters_table({
   const [relatedData, setRelatedData] = useState(null);
   //? Variable de estado para el buscador
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-
+  const [test2, setTest2] = useState(1);
   const [globalFilter, setGlobalFilter] = useState("");
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -51,7 +51,6 @@ export default function Characters_table({
   });
 
   useEffect(() => {
-    console.log("characters in the table are: " + characters);
   }, [characters]);
   const footerContent = (
     <div>
@@ -161,9 +160,12 @@ export default function Characters_table({
         <IconField iconPosition="left">
           <InputIcon className="pi pi-search" />
           <InputText
+          style={{width : "28vw"}}
             value={globalFilterValue}
             onChange={(event) => {
-              console.log("texto a filtrar: ", event.target.value);
+              let _filters = { ...filters };
+              _filters["global"].value =  event.target.value;
+              setGlobalFilterValue(event.target.value);
               needToFilter(event.target.value);
             }}
             placeholder="Buscar personaje"
@@ -225,7 +227,7 @@ export default function Characters_table({
         loading={loading}
         /* Header Buscar */
         globalFilterFields={["name"]}
-        emptyMessage="No hay coincidencias."
+        emptyMessage={<h2 style={{color:"darkred"}}>{"No hay coincidencias."}</h2>}
         header={header}
         filters={filters}
         /* */
