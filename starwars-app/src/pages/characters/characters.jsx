@@ -22,10 +22,21 @@ export default function Characters() {
   //! ESTA SI SE ENVIA
   const [characters, setCharacters] = useState([]);
 
+  const [pageCharacters, setPageCharacters] = useState([]);
+
+  useEffect(() => {
+    showLoading()
+    
+    setLoading(true);
+    setTest(test + 1);
+    if (pageCharacters.length === 0) return;
+    sendSearchPlanets(pageCharacters);
+    setLoading(false);
+  }, [pageCharacters]);
+
   useEffect(() => {
     fetchData();
   }, []);
-
 
   const fetchData = async () => {
     var data;
@@ -57,8 +68,15 @@ export default function Characters() {
   async function sendSearchPlanets(data) {
     const temporalData = [...data];
     const oldId = {};
+    var planetId = "";
     for (let i = 0; i < temporalData.length; i++) {
-      const planetId = temporalData[i].homeworld.match(/\d+/)[0];
+      try {
+        //si no falla entonces es por que tenemos la URL, y guardaremos la URL en el campo nuevo
+        planetId = temporalData[i].homeworld.match(/\d+/)[0];
+        temporalData[i].homeworldURL = temporalData[i].homeworld;
+      } catch {
+        planetId = temporalData[i].homeworldURL.match(/\d+/)[0];
+      }
 
       if (oldId[planetId]) {
         //! Ya existe en caché
@@ -71,7 +89,8 @@ export default function Characters() {
       }
     }
     setCharacters(temporalData);
-    setTest(test + 1);  
+    setTest(test + 1);
+    showCorrectLoad();
   }
 
   const showLoading = () => {
@@ -95,18 +114,21 @@ export default function Characters() {
       <Toast ref={toast} />
 
       <Characters_table
-        allCharactersName={allCharacters}
+        loading={loading}
+        allCharacters={allCharacters}
         characters={characters}
         totalRecords={allCharacters.length}
         currentPage={currentPage}
         rows={ROWS}
+        needToFilter={(words) => {
+          //en este caso mejor se filtra aqui, imposible si la tabla se encarga
+        }}
         onPageChange={(page) => {
           setCurrentPage(page);
           const start = (page - 1) * ROWS;
           const end = page * ROWS;
           const pageData = allCharacters.slice(start, end);
-          setCharacters(pageData);
-          sendSearchPlanets(pageData);
+          setPageCharacters(pageData);
         }}
       />
     </>

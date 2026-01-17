@@ -28,13 +28,14 @@ import { get_starShip_by_id } from "../../services/starShips";
 import { get_vehicles_by_id } from "../../services/vehicles";
 
 export default function Characters_table({
-  allCharactersName,
+  allCharacters,
   characters,
   onPageChange,
   totalRecords,
-  currentPage=1,
-  rows=10,
-  number,
+  currentPage = 1,
+  rows = 10,
+  needToFilter,
+  loading,
 }) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
@@ -42,12 +43,12 @@ export default function Characters_table({
   const [relatedData, setRelatedData] = useState(null);
   //? Variable de estado para el buscador
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  
+
+  const [globalFilter, setGlobalFilter] = useState("");
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: { value: characters.name, matchMode: FilterMatchMode.STARTS_WITH },
+    name: { value: allCharacters, matchMode: FilterMatchMode.STARTS_WITH },
   });
-   
 
   useEffect(() => {
     console.log("characters in the table are: " + characters);
@@ -78,17 +79,17 @@ export default function Characters_table({
     try {
       //necesito investigar si el promise es la mejor opcion
       const films = await Promise.all(
-        character.films.map((url) => get_films_by_id(extractIdFromURL(url)))
+        character.films.map((url) => get_films_by_id(extractIdFromURL(url))),
       );
       const starships = await Promise.all(
         character.starships.map((url) =>
-          get_starShip_by_id(extractIdFromURL(url))
-        )
+          get_starShip_by_id(extractIdFromURL(url)),
+        ),
       );
       const vehicles = await Promise.all(
         character.vehicles.map((url) =>
-          get_vehicles_by_id(extractIdFromURL(url))
-        )
+          get_vehicles_by_id(extractIdFromURL(url)),
+        ),
       );
 
       setRelatedData({ films, starships, vehicles });
@@ -153,14 +154,6 @@ export default function Characters_table({
     );
   };
 
-  const onGlobalFilterChange = (e) => {
-    debugger
-    const value = e.target.value;
-    let _filters = { ...filters };
-    _filters["global"].value = value;
-    setGlobalFilterValue(value);
-  };
-
   //? Es el header que aparece en la tabla
   const renderHeader = () => {
     return (
@@ -169,7 +162,10 @@ export default function Characters_table({
           <InputIcon className="pi pi-search" />
           <InputText
             value={globalFilterValue}
-            onChange={onGlobalFilterChange}
+            onChange={(event) => {
+              console.log("texto a filtrar: ", event.target.value);
+              needToFilter(event.target.value);
+            }}
             placeholder="Buscar personaje"
           />
         </IconField>
@@ -226,10 +222,12 @@ export default function Characters_table({
         lazy
         first={first}
         rows={rows}
+        loading={loading}
         /* Header Buscar */
         globalFilterFields={["name"]}
-        emptyMessage="No customers found."
+        emptyMessage="No hay coincidencias."
         header={header}
+        filters={filters}
         /* */
         selectionMode="single"
         className="table_style"
@@ -241,7 +239,7 @@ export default function Characters_table({
         onRowDoubleClick={() => onRowSelect(selectedCharacter)}
         metaKeySelection={true}
         paginator
-        paginatorLeft={<p>{first+"-"+(first+rows)}</p>}
+        paginatorLeft={<p>{first + "-" + (first + rows)}</p>}
         paginatorRight={<p>{"Total de personajes:" + totalRecords}</p>}
         onPage={(event) => {
           console.log("Pagina solicitada:", event.page + 1);
