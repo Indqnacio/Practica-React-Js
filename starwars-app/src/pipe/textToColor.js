@@ -1,3 +1,4 @@
+//este metodo no debe quedar ahi
 export default function textToColor(hairColor) {
   const normalizedColor = hairColor.toLowerCase().trim();
 
@@ -50,42 +51,14 @@ const obj= normalizedText(textColor)
 
 }
 
-function nombreAHex(colorNombre) {
-    const ctx = document.createElement('canvas').getContext('2d');
-    ctx.fillStyle = colorNombre;
-    return ctx.fillStyle; // Retorna el código en formato hexadecimal
-}
-
-function mixedColorsToColor(hairColors) {
-  const color1 = hairColors[0].trim();
-  const color2 = hairColors[1].trim();
-  return color1, color2;
-}
-
-function normalizedText(text){
-  //convertimos en minuscula
-  const normalizado = text.toLowerCase().trim();
-  //probar si realmente quita espacios en blanco
-  normalizado= normalizado.replace(/\s+/g, ''); 
-  //white,red,green
-  textoFinal= normalizado.split(",");
-  //[[white][red][green]]
-
-
-}
 
 function obtenerHexSeguro(nombre) {
-    // 1. Limpiar el texto y buscar en nuestro diccionario
     const normalizado = nombre.toLowerCase().trim();
 
-    // 2. Si no está, intentar con el truco del Canvas
     const ctx = document.createElement('canvas').getContext('2d');
     ctx.fillStyle = normalizado;
+    //aqui deberia ir un metodo para poner numeros aleatorios por si acaso, como un fallback
     
-    
-
-    // Si el color no es válido, el navegador no cambia el valor de fillStyle
-    // Por seguridad comparamos o devolvemos un valor nulo
     const resultado = ctx.fillStyle;
     return resultado;
 }
@@ -94,7 +67,7 @@ console.log(obtenerHexSeguro("pistache")); // #90b083 (desde tu lista)
 console.log(obtenerHexSeguro("red"));      // #ff0000 (desde el navegador)
 
 
-///✅ “Dado el texto pistache, dame SIEMPRE el mismo color”.///
+//Esto esta mal, debe ser codigo hexadecimal
 function hashToColor(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
