@@ -44,7 +44,7 @@ export default function CarouselWeb()
     <Card
       title={department.name}
       style={{ backgroundColor: department.bgColor, color: "#fff", textAlign: "center" }}
-      className="department-card"
+      className="department_card"
     >
       <i className={`${department.icon}`} style={{ fontSize: "2rem", marginBottom: "1rem" }}></i>
       <p>{department.description}</p>
@@ -53,11 +53,11 @@ export default function CarouselWeb()
 
   return (
   <Fragment>
-     <div className="carousel-container">
+     <div className="carousel_container">
         <Carousel
           value={departments}
           itemTemplate={departmentTemplate}
-          numVisible={3}
+          numVisible={2}
           numScroll={1}
           responsiveOptions={responsiveOptions}
           circular

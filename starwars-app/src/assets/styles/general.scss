@@ -8,17 +8,18 @@ body {
   padding: 0;
 }
 
-.h1_carousel_home{
-color: white;
-margin-bottom: 2vh;
+.h1_carousel_home {
+  color: white;
+  margin-bottom: 2vh;
 }
-.divPrinc{
-    
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+.divPrinc {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
-
+.carousel_container{
+    width: 100%;
+}
 /************* Component SideNav *************/
 .sidenav_links {
   width: 100%;
@@ -77,8 +78,32 @@ margin-bottom: 2vh;
   margin-left: 2%;
   font-weight: 600;
 }
- 
+
 /************* Component table *************/
+.title_table {
+  color: rgb(56, 51, 51);
+  text-shadow: 1px 0px 20px #87a155b8;
+  font-family: System-ui, Courier, monospace;
+  font-size: 1.1vw;
+}
+.title_table h2 {
+  margin: 0;
+}
+.header_table {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.input_search {
+  display: flex;
+  justify-content: right;
+  width: 76%;
+}
+.input_search Datatable {
+  background-color: red;
+  width: 80%;
+}
 .badge_color {
   height: fit-content;
   width: 50%;
@@ -96,14 +121,4 @@ margin-bottom: 2vh;
 .table_container {
   width: 80%;
   margin: auto;
-}
-
-.input_search {
-  display: flex; 
-  justify-content: right;
-  width: 100%;
-}
-.input_search Datatable {
-  background-color: red;
-  width: 80%;
 }

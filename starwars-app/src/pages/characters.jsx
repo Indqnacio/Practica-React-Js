@@ -175,6 +175,7 @@ export default function Characters() {
       <Toast ref={toast} />
 
       <Characters_table
+        headerText="Character"
         loading={loading}
         allCharacters={allCharacters}
         characters={characters}

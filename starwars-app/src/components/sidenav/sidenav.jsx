@@ -3,8 +3,6 @@ import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
 import { Link } from "react-router-dom";
-
-import "./sidenav.css";
 import logoImage from "../../assets/images/logo_side_nav.png";
 
 export default function SideNav() {

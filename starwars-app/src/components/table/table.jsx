@@ -1,10 +1,7 @@
 /*
 @El paginador sigue fallando debo corregirlo todavia
-@podriamos agregar una pipeline para poner los colores correctamente(falta ver si conviene usar canvas y el otro metodo)
-@Finalmente falta agregar el buscador (que funcione)
-
-@En este caso me falta todavia poner el color de pelo con color(ya)
-@Tambien falta hacer que al darle click a una fila salga un modal con mas informacion del personaje
+@Finalmente falta agregar el buscador (que funcione aun si le pongo informacion rapido)
+@Modularizar la tabla en otro archivo para hacerla reutilizable
 */
 
 import { ConfirmDialog } from "primereact/confirmdialog";
@@ -19,24 +16,25 @@ import { IconField } from "primereact/iconfield";
 import { InputText } from "primereact/inputtext";
 import { InputIcon } from "primereact/inputicon";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
-import "./table.css";
-
-import textToColor from "../../pipe/textToColor";
-import getColorCodes from "../../pipe/textToColor.js";
-import logoImage from "../../assets/images/logo_side_nav.png";
+//? Servicios
 import { get_films_by_id } from "../../services/films";
 import { get_starShip_by_id } from "../../services/starShips";
 import { get_vehicles_by_id } from "../../services/vehicles";
+
+import getColorCodes from "../../pipe/textToColor.js";
+import logoImage from "../../assets/images/logo_side_nav.png";
+import MoreInfoDialogContent from "../../models/character.jsx"
 
 export default function Characters_table({
   allCharacters,
   characters,
   onPageChange,
   totalRecords,
+  loading,
+  needToFilter,
   currentPage = 1,
   rows = 10,
-  needToFilter,
-  loading,
+  headerText,
 }) {
   const [selectedCharacter, setCharacter] = useState(null);
   const toast = useRef(null);
@@ -44,7 +42,6 @@ export default function Characters_table({
   const [relatedData, setRelatedData] = useState(null);
   //? Variable de estado para el buscador
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [test2, setTest2] = useState(1);
   const [globalFilter, setGlobalFilter] = useState("");
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -134,21 +131,26 @@ export default function Characters_table({
   //? Es el header que aparece en la tabla
   const renderHeader = () => {
     return (
-      <div className="input_search">
-        <IconField iconPosition="left">
-          <InputIcon className="pi pi-search" />
-          <InputText
-            style={{ width: "30vw" }}
-            value={globalFilterValue}
-            onChange={(event) => {
-              let _filters = { ...filters };
-              _filters["global"].value = event.target.value;
-              setGlobalFilterValue(event.target.value);
-              needToFilter(event.target.value);
-            }}
-            placeholder="Buscar personaje"
-          />
-        </IconField>
+      <div className="header_table">
+        <div className="title_table">
+          <h2>{headerText}</h2>
+        </div>
+        <div className="input_search">
+          <IconField iconPosition="left">
+            <InputIcon className="pi pi-search" />
+            <InputText
+              style={{ width: "30vw" }}
+              value={globalFilterValue}
+              onChange={(event) => {
+                let _filters = { ...filters };
+                _filters["global"].value = event.target.value;
+                setGlobalFilterValue(event.target.value);
+                needToFilter(event.target.value);
+              }}
+              placeholder="Buscar personaje"
+            />
+          </IconField>
+        </div>
       </div>
     );
   };
@@ -171,28 +173,11 @@ export default function Characters_table({
         }}
       >
         <div>
-          <h2>{selectedCharacter?.name}</h2>
-          <p>
-            <strong>Altura:</strong> {selectedCharacter?.height} cm
-          </p>
-          <h3>Películas</h3>
-          <ul>
-            {relatedData?.films?.map((film, index) => (
-              <li key={index}>{film.title}</li>
-            ))}
-          </ul>
-          <h3>Naves espaciales</h3>
-          <ul>
-            {relatedData?.starships?.map((starship, index) => (
-              <li key={index}>{starship.name}</li>
-            ))}
-          </ul>
-          <h3>Vehículos</h3>
-          <ul>
-            {relatedData?.vehicles?.map((vehicle, index) => (
-              <li key={index}>{vehicle.name}</li>
-            ))}
-          </ul>
+          {<MoreInfoDialogContent
+            selectedCharacter={selectedCharacter}
+            relatedData={relatedData}
+          />}
+         
         </div>
       </Dialog>
       <Toast ref={toast} />
