@@ -22,6 +22,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import "./table.css";
 
 import textToColor from "../../pipe/textToColor";
+import getColorCodes from "../../pipe/textToColor.js";
 import logoImage from "../../assets/images/logo_side_nav.png";
 import { get_films_by_id } from "../../services/films";
 import { get_starShip_by_id } from "../../services/starShips";
@@ -50,8 +51,7 @@ export default function Characters_table({
     name: { value: allCharacters, matchMode: FilterMatchMode.STARTS_WITH },
   });
 
-  useEffect(() => {
-  }, [characters]);
+  useEffect(() => {}, [characters]);
   const footerContent = (
     <div>
       <Button
@@ -110,46 +110,23 @@ export default function Characters_table({
     return parts[parts.length - 1];
   };
 
-  const HairBodyTemplate = (rowData) => {
-    const bgColor = textToColor(rowData.hair_color);
-    //AQUI PODRIA PONER PARA QUE YA CORRIGA LOS COLORES const color= 
-
+  const getColorsCodes = (data, type) => {
+    const colors = getColorCodes(data[`${type}_color`]);
     return (
-      <div
-        className="badge_color"
-        style={{
-          backgroundColor: bgColor,
-        }}
-      >
-        {rowData.hair_color}
-      </div>
-    );
-  };
-  const SkinBodyTemplate = (rowData) => {
-    const bgColor = textToColor(rowData.skin_color);
-
-    return (
-      <div
-        className="badge_color"
-        style={{
-          backgroundColor: bgColor,
-        }}
-      >
-        {rowData.skin_color}
-      </div>
-    );
-  };
-  const EyeBodyTemplate = (rowData) => {
-    const bgColor = textToColor(rowData.eye_color);
-
-    return (
-      <div
-        className="badge_color"
-        style={{
-          backgroundColor: bgColor,
-        }}
-      >
-        {rowData.eye_color}
+      <div className="badge_container">
+        {colors.map((item, index) => (
+          <div
+            key={index}
+            className="badge_color"
+            style={{
+              backgroundColor: item.color,
+              border: item.color === "#ffffff" ? "1px solid #333" : "none",
+              color: item.color === "#ffffff" ? "#000" : "#fff",
+            }}
+          >
+            {item.text}
+          </div>
+        ))}
       </div>
     );
   };
@@ -161,11 +138,11 @@ export default function Characters_table({
         <IconField iconPosition="left">
           <InputIcon className="pi pi-search" />
           <InputText
-          style={{width : "28vw"}}
+            style={{ width: "30vw" }}
             value={globalFilterValue}
             onChange={(event) => {
               let _filters = { ...filters };
-              _filters["global"].value =  event.target.value;
+              _filters["global"].value = event.target.value;
               setGlobalFilterValue(event.target.value);
               needToFilter(event.target.value);
             }}
@@ -228,7 +205,9 @@ export default function Characters_table({
         loading={loading}
         /* Header Buscar */
         globalFilterFields={["name"]}
-        emptyMessage={<h2 style={{color:"darkred"}}>{"No hay coincidencias."}</h2>}
+        emptyMessage={
+          <h2 style={{ color: "darkred" }}>{"No hay coincidencias."}</h2>
+        }
         header={header}
         filters={filters}
         /* */
@@ -258,7 +237,7 @@ export default function Characters_table({
           showFilterMenu={false}
           filterMenuStyle={{ width: "14rem" }}
           style={{ minWidth: "12rem" }}
-          body={HairBodyTemplate}
+          body={(e) => getColorsCodes(e, "hair")}
         ></Column>
 
         <Column
@@ -267,7 +246,7 @@ export default function Characters_table({
           showFilterMenu={false}
           filterMenuStyle={{ width: "14rem" }}
           style={{ minWidth: "12rem" }}
-          body={EyeBodyTemplate}
+          body={(e) => getColorsCodes(e, "eye")}
         ></Column>
 
         <Column
@@ -276,7 +255,7 @@ export default function Characters_table({
           showFilterMenu={false}
           filterMenuStyle={{ width: "14rem" }}
           style={{ minWidth: "12rem" }}
-          body={SkinBodyTemplate}
+          body={(e) => getColorsCodes(e, "skin")}
         ></Column>
         <Column field="birth_year" header="Año de nacimiento"></Column>
         <Column field="gender" header="genero"></Column>

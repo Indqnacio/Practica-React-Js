@@ -100,9 +100,11 @@ export default function Characters() {
     switch (op) {
       case 0:
         setCharacters(searchPart(text, characters));
+        sendSearchPlanets(characters);
         break;
       default:
         setCharacters(searchAll(text));
+        sendSearchPlanets(characters);
         break;
     }
     /**
@@ -183,7 +185,7 @@ export default function Characters() {
         currentPage={currentPage}
         rows={ROWS}
         needToFilter={(words) => {
-          //en este caso mejor se filtra aqui, imposible si la tabla se encarga
+          //en este caso mejor se filtra aqui, imposible si la tabla se encarga con lazy
 
           if (words == "") {
             showAllblankInput();
