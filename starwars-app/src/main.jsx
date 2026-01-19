@@ -5,6 +5,7 @@ import { StrictMode } from "react";
 
 import App from "./App.jsx";
 import "./index.css";
+import "./assets/styles/general.scss"
 
 // Libreria necesaria para primer react
 import 'primereact/resources/themes/saga-blue/theme.css';

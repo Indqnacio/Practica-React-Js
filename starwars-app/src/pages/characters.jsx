@@ -2,17 +2,17 @@ import {
   get_all_characters,
   get_one_page_character,
   get_planet_by_id,
-} from "../../services/swapi";
+} from "../services/swapi.js";
 import { useState, useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
 
-import Characters_table from "../../components/table/table";
+import Characters_table from "../components/table/table.jsx";
 import {
   showLoading,
   showCorrectLoad,
   showError,
   ShowAllMessage,
-} from "../../services/infoChips.js";
+} from "../services/infoChips.js";
 
 export default function Characters() {
   const ROWS = 10;

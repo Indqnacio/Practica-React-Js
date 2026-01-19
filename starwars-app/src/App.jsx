@@ -1,8 +1,6 @@
-import Home from "./pages/home/home.jsx";
-import Characters from "./pages/characters/characters.jsx";
+import Home from "./pages/home.jsx";
+import Characters from "./pages/characters.jsx";
 import { Routes, Route } from "react-router-dom";
-
-import "./App.css";
 import SideNav from "./components/sidenav/sidenav.jsx";
 
 function App() {
